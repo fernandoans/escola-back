@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Table(name = "turmaaluno")
 @SequenceGenerator(name = "TURMA_ALUNO_SEQ", sequenceName = "turmaaluno_id_seq", allocationSize=1)
