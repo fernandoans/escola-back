@@ -1,0 +1,43 @@
+logging:
+  level:
+    org.springframework: WARN
+    com.escola: DEBUG
+    
+spring:
+  main:
+    banner-mode: console
+  config:
+    activate:
+      on-profile: dev
+nome: test-YAML
+ambiente: não produtivo
+habilitado: false
+servidores: 
+  - ip: 127.0.0.1
+    path: /tst1
+  - ip: 127.0.0.3
+    path: /tst2
+  - ip: 127.0.0.5
+    path: /tst3
+---
+logging:
+  level:
+    org.springframework: ERROR
+    com.escola: ERROR
+
+spring:
+  main:
+    banner-mode: log
+  config:
+    activate:
+      on-profile: prod
+nome: prod-YAML
+ambiente: produtivo
+habilitado: true
+servidores: 
+  - ip: 127.0.0.2
+    path: /prod1
+  - ip: 127.0.0.4
+    path: /prod2
+  - ip: 127.0.0.6
+    path: /prod3

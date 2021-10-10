@@ -7,6 +7,17 @@ http://localhost:8080/laboratorio/swagger-ui/index.html
 Ao ativar o Front acessar a aplicação em:
 http://localhost:4200
 
+## Compilar
+Ativar o ambiente produtivo
+```
+$ java jar -Dspring.profiles.active=prod escola-back.jar
+```
+
+Ativar o ambiente não produtivo
+```
+$ java jar -Dspring.profiles.active=dev escola-back.jar
+```
+
 ## Ferramentas Utilizadas
 Para esta parte foram utilizadas as seguintes tecnologias:
 * Java - versão 8.0

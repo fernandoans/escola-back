@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "ambiente",
+    "type": "java.lang.String",
+    "description": "Ambiente Utilizado"
+  },
+  {
+    "name": "habilitado",
+    "type": "java.lang.String",
+    "description": "Está ou não habilitado"
+  },
+  {
+    "name": "nome",
+    "type": "java.lang.String",
+    "description": "Nome'"
+  },
+  {
+    "name": "servidores",
+    "type": "java.util.List",
+    "description": "Servidores do Sistema"
+  }
+]}
