@@ -1,14 +1,14 @@
 package com.escola.business;
 
 import com.escola.business.enums.CodBusinessAluno;
-import com.escola.pojo.AlunoPojo;
+import com.escola.dto.AlunoDTO;
 
 public class AlunoBusiness {
 
   private AlunoBusiness() {
   }
 
-  public static CodBusinessAluno verificar(AlunoPojo aluno) {
+  public static CodBusinessAluno verificar(AlunoDTO aluno) {
     if (FuncoesBusiness.naoContemValor(aluno.getMatricula())) {
       return CodBusinessAluno.MATRICULA_OBRIGATORIA;
     }

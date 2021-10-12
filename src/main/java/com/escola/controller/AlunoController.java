@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.escola.dto.AlunoDTO;
+import com.escola.dto.MensagemDTO;
 import com.escola.model.Aluno;
-import com.escola.pojo.AlunoPojo;
-import com.escola.pojo.MensagemPojo;
 import com.escola.service.AlunoService;
 
 import io.swagger.annotations.ApiOperation;
@@ -50,25 +50,25 @@ public class AlunoController {
 
   @ApiOperation(value = "Adicionar um aluno")
   @PostMapping("/")
-  public ResponseEntity<MensagemPojo> adicionarAluno(@RequestBody AlunoPojo aluno) {
+  public ResponseEntity<MensagemDTO> adicionarAluno(@RequestBody AlunoDTO aluno) {
     return service.add(aluno);
   }
 
   @ApiOperation(value = "Modificar um aluno")
   @PutMapping("/{matricula}")
-  public ResponseEntity<MensagemPojo> modificarAluno(@PathVariable("matricula") Integer matricula, @RequestBody AlunoPojo aluno) {
+  public ResponseEntity<MensagemDTO> modificarAluno(@PathVariable("matricula") Integer matricula, @RequestBody AlunoDTO aluno) {
     return service.update(matricula, aluno);
   }
 
   @ApiOperation(value = "Eliminar um aluno")
   @DeleteMapping("/{matricula}")
-  public ResponseEntity<MensagemPojo> deleteAluno(@PathVariable("matricula") Integer matricula) {
+  public ResponseEntity<MensagemDTO> deleteAluno(@PathVariable("matricula") Integer matricula) {
     return service.delete(matricula);
   }
 
   @ApiOperation(value = "Eliminar todos os alunos")
   @DeleteMapping("/")
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     return service.deleteAll();
   }
 }

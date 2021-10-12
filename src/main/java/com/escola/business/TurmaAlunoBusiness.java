@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.escola.business.enums.CodBusinessTurmaAluno;
+import com.escola.dto.TurmaAlunoDTO;
 import com.escola.model.TurmaAluno;
-import com.escola.pojo.TurmaAlunoPojo;
 import com.escola.repository.TurmaAlunoRepository;
 
 public class TurmaAlunoBusiness {
@@ -17,7 +17,7 @@ public class TurmaAlunoBusiness {
   private TurmaAlunoBusiness() {
   }
   
-  public static CodBusinessTurmaAluno verificar(TurmaAlunoPojo turmaAluno, char tipo, TurmaAlunoRepository taRep) {
+  public static CodBusinessTurmaAluno verificar(TurmaAlunoDTO turmaAluno, char tipo, TurmaAlunoRepository taRep) {
     repository = taRep;
     if (turmaAluno.getTurma() == null || turmaAluno.getTurma().getId() == null) {
       return CodBusinessTurmaAluno.TURMA_OBRIGATORIA;

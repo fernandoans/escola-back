@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.escola.dto.MensagemDTO;
+import com.escola.dto.TurmaAlunoDTO;
 import com.escola.model.TurmaAluno;
-import com.escola.pojo.MensagemPojo;
-import com.escola.pojo.TurmaAlunoPojo;
 import com.escola.service.TurmaAlunoService;
 
 import io.swagger.annotations.ApiOperation;
@@ -39,22 +39,28 @@ public class TurmaAlunoController {
   public ResponseEntity<TurmaAluno> findId(@PathVariable Long id) {
     return service.findId(id);
   }
+  
+  @ApiOperation(value = "Retornar os alunos de uma Turma")
+  @GetMapping(value="/turma/{id}", produces="application/json")
+  public ResponseEntity<List<TurmaAluno>> findTurma(@PathVariable Long id) {
+    return service.findTurma(id);
+  }
 
   @ApiOperation(value = "Adicionar um aluno na turma")
   @PostMapping("/")
-  public ResponseEntity<MensagemPojo> adicionarTurmaAluno(@RequestBody TurmaAlunoPojo turmaAluno) {
+  public ResponseEntity<MensagemDTO> adicionarTurmaAluno(@RequestBody TurmaAlunoDTO turmaAluno) {
     return service.add(turmaAluno);
   }
 
   @ApiOperation(value = "Eliminar um aluno na turma")
   @DeleteMapping("/{id}")
-  public ResponseEntity<MensagemPojo> deleteTurmaAluno(@PathVariable("id") Long id) {
+  public ResponseEntity<MensagemDTO> deleteTurmaAluno(@PathVariable("id") Long id) {
     return service.delete(id);
   }
 
   @ApiOperation(value = "Eliminar todos os alunos da turma")
   @DeleteMapping("/")
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     return service.deleteAll();
   }
 }

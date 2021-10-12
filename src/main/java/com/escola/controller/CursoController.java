@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.escola.dto.CursoDTO;
+import com.escola.dto.MensagemDTO;
 import com.escola.model.Curso;
-import com.escola.pojo.CursoPojo;
-import com.escola.pojo.MensagemPojo;
 import com.escola.service.CursoService;
 
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +37,7 @@ public class CursoController {
 
   @ApiOperation(value = "Retornar um curso pela Chave")
   @GetMapping(value="/{id}", produces="application/json")
-  public ResponseEntity<Curso> findMatricula(@PathVariable Long id) {
+  public ResponseEntity<Curso> findId(@PathVariable Long id) {
     return service.findId(id);
   }
 
@@ -49,25 +49,25 @@ public class CursoController {
 
   @ApiOperation(value = "Adicionar um curso")
   @PostMapping("/")
-  public ResponseEntity<MensagemPojo> adicionarCurso(@RequestBody CursoPojo curso) {
+  public ResponseEntity<MensagemDTO> adicionarCurso(@RequestBody CursoDTO curso) {
     return service.add(curso);
   }
 
   @ApiOperation(value = "Modificar um curso")
   @PutMapping("/{id}")
-  public ResponseEntity<MensagemPojo> modificarCurso(@PathVariable("id") Long id, @RequestBody CursoPojo curso) {
+  public ResponseEntity<MensagemDTO> modificarCurso(@PathVariable("id") Long id, @RequestBody CursoDTO curso) {
     return service.update(id, curso);
   }
 
   @ApiOperation(value = "Eliminar um curso")
   @DeleteMapping("/{id}")
-  public ResponseEntity<MensagemPojo> deleteCurso(@PathVariable("id") Long id) {
+  public ResponseEntity<MensagemDTO> deleteCurso(@PathVariable("id") Long id) {
     return service.delete(id);
   }
 
   @ApiOperation(value = "Eliminar todos os cursos")
   @DeleteMapping("/")
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     return service.deleteAll();
   }
 }

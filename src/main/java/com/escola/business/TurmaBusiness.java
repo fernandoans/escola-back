@@ -3,8 +3,8 @@ package com.escola.business;
 import java.util.List;
 
 import com.escola.business.enums.CodBusinessTurma;
+import com.escola.dto.TurmaDTO;
 import com.escola.model.Turma;
-import com.escola.pojo.TurmaPojo;
 import com.escola.repository.TurmaRepository;
 
 public class TurmaBusiness {
@@ -14,7 +14,7 @@ public class TurmaBusiness {
   private TurmaBusiness() {
   }
 
-  public static CodBusinessTurma verificar(TurmaPojo turma, char tipo, TurmaRepository tRep) {
+  public static CodBusinessTurma verificar(TurmaDTO turma, char tipo, TurmaRepository tRep) {
     repository = tRep;
     
     if (turma.getProfessor() == null || turma.getProfessor().getMatricula() == null) {

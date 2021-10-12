@@ -9,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.escola.business.AlunoBusiness;
-import com.escola.business.FuncoesBusiness;
 import com.escola.business.enums.CodBusinessAluno;
+import com.escola.converters.AlunoConverter;
+import com.escola.dto.AlunoDTO;
+import com.escola.dto.MensagemDTO;
 import com.escola.model.Aluno;
-import com.escola.pojo.AlunoPojo;
-import com.escola.pojo.MensagemPojo;
 import com.escola.repository.AlunoRepository;
 
 @Service
@@ -21,6 +21,9 @@ public class AlunoService {
 
   @Autowired
   private AlunoRepository repository;
+  
+  @Autowired
+  private AlunoConverter converter;
 
   public ResponseEntity<List<Aluno>> findAll() {
     List<Aluno> alunos = (List<Aluno>) repository.findAll();
@@ -51,59 +54,48 @@ public class AlunoService {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  public ResponseEntity<MensagemPojo> add(AlunoPojo alunoPojo) {
+  public ResponseEntity<MensagemDTO> add(AlunoDTO alunoDTO) {
     try {
-      CodBusinessAluno codBusiness = AlunoBusiness.verificar(alunoPojo);
+      CodBusinessAluno codBusiness = AlunoBusiness.verificar(alunoDTO);
       if (codBusiness == CodBusinessAluno.OK) {
-        repository.save(adaptarPojo(alunoPojo));
-        return new ResponseEntity<>(new MensagemPojo("Aluno criado com sucesso."), HttpStatus.OK);
+        repository.save(converter.convertToEntity(alunoDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessAluno.INCLUIDO_OK), HttpStatus.OK);
       }
-      return new ResponseEntity<>(new MensagemPojo(codBusiness.getDescricao()), HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public ResponseEntity<MensagemPojo> update(Integer matricula, AlunoPojo alunoPojo) {
+  public ResponseEntity<MensagemDTO> update(Integer matricula, AlunoDTO alunoDTO) {
     Optional<Aluno> optional = repository.findById(matricula);
     if (optional.isPresent()) {
-      alunoPojo.setMatricula("" + matricula);
-      CodBusinessAluno codBusiness = AlunoBusiness.verificar(alunoPojo);
+      alunoDTO.setMatricula("" + matricula);
+      CodBusinessAluno codBusiness = AlunoBusiness.verificar(alunoDTO);
       if (codBusiness == CodBusinessAluno.OK) {
-        repository.save(adaptarPojo(alunoPojo));
-        return new ResponseEntity<>(new MensagemPojo("Aluno modificado com sucesso."), HttpStatus.OK);
+        repository.save(converter.convertToEntity(alunoDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessAluno.ALTERADO_OK), HttpStatus.OK);
       }
-      return new ResponseEntity<>(new MensagemPojo(codBusiness.getDescricao()), HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  public ResponseEntity<MensagemPojo> delete(Integer matricula) {
+  public ResponseEntity<MensagemDTO> delete(Integer matricula) {
     try {
       repository.deleteById(matricula);
-      return new ResponseEntity<>(new MensagemPojo("Aluno eliminado com sucesso."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessAluno.EXCLUIDO_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     try {
       repository.deleteAll();
-      return new ResponseEntity<>(new MensagemPojo("Todos os alunos eliminados."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessAluno.EXCLUIDO_ALL_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  private Aluno adaptarPojo(AlunoPojo alunoPojo) {
-    Aluno aluno = new Aluno();
-    aluno.setMatricula(Integer.parseInt(alunoPojo.getMatricula()));
-    aluno.setNome(alunoPojo.getNome());
-    aluno.setDatanascimento(FuncoesBusiness.strToDateSQL(alunoPojo.getDatanascimento()));
-    aluno.setSexo(alunoPojo.getSexo());
-    aluno.setEmail(alunoPojo.getEmail());
-    aluno.setContato(alunoPojo.getContato());
-    return aluno;
   }
 }

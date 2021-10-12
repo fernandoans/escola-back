@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.escola.business.FuncoesBusiness;
+import com.escola.business.CursoBusiness;
+import com.escola.business.enums.CodBusinessCurso;
+import com.escola.converters.CursoConverter;
+import com.escola.dto.CursoDTO;
+import com.escola.dto.MensagemDTO;
 import com.escola.model.Curso;
-import com.escola.model.Professor;
-import com.escola.pojo.CursoPojo;
-import com.escola.pojo.MensagemPojo;
 import com.escola.repository.CursoRepository;
-import com.escola.repository.ProfessorRepository;
 
 @Service
 public class CursoService {
@@ -23,8 +23,8 @@ public class CursoService {
   private CursoRepository repository;
   
   @Autowired
-  private ProfessorRepository profRepository;
-
+  private CursoConverter converter;
+  
   public ResponseEntity<List<Curso>> findAll() {
     List<Curso> cursos = (List<Curso>)repository.findAll();
     if (cursos.isEmpty()) {
@@ -54,60 +54,50 @@ public class CursoService {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
   
-  public ResponseEntity<MensagemPojo> add(CursoPojo cursoPojo) {
+  public ResponseEntity<MensagemDTO> add(CursoDTO cursoDTO) {
     try {
-      repository.save(adaptarPojo(cursoPojo));
-      return new ResponseEntity<>(new MensagemPojo("Curso criado com sucesso."), HttpStatus.OK);
+      CodBusinessCurso codBusiness = CursoBusiness.verificar(cursoDTO);
+      if (codBusiness == CodBusinessCurso.OK) {
+        repository.save(converter.convertToEntity(cursoDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessCurso.INCLUIDO_OK), HttpStatus.OK);
+      }
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }  
 
-  public ResponseEntity<MensagemPojo> update(Long id, CursoPojo cursoPojo) {
+  public ResponseEntity<MensagemDTO> update(Long id, CursoDTO cursoDTO) {
     Optional<Curso> optional = repository.findById(id);
     if (optional.isPresent()) {
-      Curso obj = adaptarPojo(cursoPojo);
-      obj.setId(id);
-      repository.save(obj);
-      return new ResponseEntity<>(new MensagemPojo("Curso modificado com sucesso."), HttpStatus.OK);
+      cursoDTO.setId(""+id);
+      CodBusinessCurso codBusiness = CursoBusiness.verificar(cursoDTO);
+      if (codBusiness == CodBusinessCurso.OK) {
+        Curso obj = converter.convertToEntity(cursoDTO);
+        obj.setId(id);
+        repository.save(obj);
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessCurso.ALTERADO_OK), HttpStatus.OK);
+      }
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
   
-  public ResponseEntity<MensagemPojo> delete(Long id) {
+  public ResponseEntity<MensagemDTO> delete(Long id) {
     try {
       repository.deleteById(id);
-      return new ResponseEntity<>(new MensagemPojo("Curso eliminado com sucesso."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessCurso.EXCLUIDO_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     try {
       repository.deleteAll();
-      return new ResponseEntity<>(new MensagemPojo("Todos os cursos eliminados."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessCurso.EXCLUIDO_ALL_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-  
-  private Curso adaptarPojo(CursoPojo cursoPojo) {
-    Curso curso = new Curso();
-    curso.setNome(cursoPojo.getNome());
-    curso.setDescricao(cursoPojo.getDescricao());
-    curso.setCargahoraria(Integer.parseInt(cursoPojo.getCargahoraria()));
-    curso.setQtdalunos(Integer.parseInt(cursoPojo.getQtdalunos()));
-    curso.setDatainicio(FuncoesBusiness.strToDateSQL(cursoPojo.getDatainicio()));
-    curso.setNumsala(Integer.parseInt(cursoPojo.getNumsala()));
-    
-    // Obter o professor
-    Professor p = null; 
-    Optional<Professor> optional = profRepository.findById(Integer.parseInt(cursoPojo.getProfessor().getMatricula()));
-    if (optional.isPresent()) {
-      p = optional.get();
-    }
-    curso.setProfessor(p);
-    return curso;
   }
 }

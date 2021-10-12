@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.escola.dto.MensagemDTO;
+import com.escola.dto.TurmaDTO;
 import com.escola.model.Turma;
-import com.escola.pojo.MensagemPojo;
-import com.escola.pojo.TurmaPojo;
 import com.escola.service.TurmaService;
 
 import io.swagger.annotations.ApiOperation;
@@ -49,25 +49,25 @@ public class TurmaController {
 
   @ApiOperation(value = "Adicionar uma turma")
   @PostMapping("/")
-  public ResponseEntity<MensagemPojo> adicionarTurma(@RequestBody TurmaPojo turma) {
+  public ResponseEntity<MensagemDTO> adicionarTurma(@RequestBody TurmaDTO turma) {
     return service.add(turma);
   }
 
   @ApiOperation(value = "Modificar uma turma")
   @PutMapping("/{id}")
-  public ResponseEntity<MensagemPojo> modificarTurma(@PathVariable("id") Long id, @RequestBody TurmaPojo turma) {
+  public ResponseEntity<MensagemDTO> modificarTurma(@PathVariable("id") Long id, @RequestBody TurmaDTO turma) {
     return service.update(id, turma);
   }
 
   @ApiOperation(value = "Eliminar uma turma")
   @DeleteMapping("/{id}")
-  public ResponseEntity<MensagemPojo> deleteTurma(@PathVariable("id") Long id) {
+  public ResponseEntity<MensagemDTO> deleteTurma(@PathVariable("id") Long id) {
     return service.delete(id);
   }
 
   @ApiOperation(value = "Eliminar todas as turmas")
   @DeleteMapping("/")
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     return service.deleteAll();
   }
 }

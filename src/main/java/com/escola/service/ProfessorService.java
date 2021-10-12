@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.escola.business.FuncoesBusiness;
 import com.escola.business.ProfessorBusiness;
 import com.escola.business.enums.CodBusinessProfessor;
+import com.escola.converters.ProfessorConverter;
+import com.escola.dto.MensagemDTO;
+import com.escola.dto.ProfessorDTO;
 import com.escola.model.Professor;
-import com.escola.pojo.MensagemPojo;
-import com.escola.pojo.ProfessorPojo;
 import com.escola.repository.ProfessorRepository;
 
 @Service
@@ -21,6 +21,9 @@ public class ProfessorService {
 
   @Autowired
   private ProfessorRepository repository;
+
+  @Autowired
+  private ProfessorConverter converter;
   
   public ResponseEntity<List<Professor>> findAll() {
     List<Professor> professores = (List<Professor>)repository.findAll();
@@ -51,60 +54,48 @@ public class ProfessorService {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
   
-  public ResponseEntity<MensagemPojo> add(ProfessorPojo professorPojo) {
+  public ResponseEntity<MensagemDTO> add(ProfessorDTO professorDTO) {
     try {
-      CodBusinessProfessor codBusiness = ProfessorBusiness.verificar(professorPojo);
+      CodBusinessProfessor codBusiness = ProfessorBusiness.verificar(professorDTO);
       if (codBusiness == CodBusinessProfessor.OK) {
-        repository.save(adaptarPojo(professorPojo));
-        return new ResponseEntity<>(new MensagemPojo("Professor criado com sucesso."), HttpStatus.OK);
+        repository.save(converter.convertToEntity(professorDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessProfessor.INCLUIDO_OK), HttpStatus.OK);
       } 
-      return new ResponseEntity<>(new MensagemPojo(codBusiness.getDescricao()), HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }  
 
-  public ResponseEntity<MensagemPojo> update(Integer matricula, ProfessorPojo professorPojo) {
+  public ResponseEntity<MensagemDTO> update(Integer matricula, ProfessorDTO professorDTO) {
     Optional<Professor> optional = repository.findById(matricula);
     if (optional.isPresent()) {
-      professorPojo.setMatricula("" + matricula);
-      CodBusinessProfessor codBusiness = ProfessorBusiness.verificar(professorPojo);
+      professorDTO.setMatricula("" + matricula);
+      CodBusinessProfessor codBusiness = ProfessorBusiness.verificar(professorDTO);
       if (codBusiness == CodBusinessProfessor.OK) {
-        repository.save(adaptarPojo(professorPojo));
-        return new ResponseEntity<>(new MensagemPojo("Professor modificado com sucesso."), HttpStatus.OK);
+        repository.save(converter.convertToEntity(professorDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessProfessor.ALTERADO_OK), HttpStatus.OK);
       } 
-      return new ResponseEntity<>(new MensagemPojo(codBusiness.getDescricao()), HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     }
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
   
-  public ResponseEntity<MensagemPojo> delete(Integer matricula) {
+  public ResponseEntity<MensagemDTO> delete(Integer matricula) {
     try {
       repository.deleteById(matricula);
-      return new ResponseEntity<>(new MensagemPojo("Professor eliminado com sucesso."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessProfessor.EXCLUIDO_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     try {
       repository.deleteAll();
-      return new ResponseEntity<>(new MensagemPojo("Todos os professores eliminados."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessProfessor.EXCLUIDO_ALL_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-  
-  private Professor adaptarPojo(ProfessorPojo professorPojo) {
-    Professor professor = new Professor();
-    professor.setMatricula(Integer.parseInt(professorPojo.getMatricula()));
-    professor.setNome(professorPojo.getNome());
-    professor.setDatanascimento(FuncoesBusiness.strToDateSQL(professorPojo.getDatanascimento()));
-    professor.setSexo(professorPojo.getSexo());
-    professor.setEmail(professorPojo.getEmail());
-    professor.setContato(professorPojo.getContato());
-    professor.setDisciplina(professorPojo.getDisciplina());
-    return professor;
   }
 }

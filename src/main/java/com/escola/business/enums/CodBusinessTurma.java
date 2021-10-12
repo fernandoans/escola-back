@@ -2,6 +2,10 @@ package com.escola.business.enums;
 
 public enum CodBusinessTurma {
   OK("Sem problemas."),
+  INCLUIDO_OK("Turma criada com sucesso."),
+  ALTERADO_OK("Turma modificada com sucesso."),
+  EXCLUIDO_OK("Turma eliminada com sucesso."),
+  EXCLUIDO_ALL_OK("Todas as turmas eliminadas."),
   INTERVALO_ERRADO("A data de término não pode ser menor que a data início."),
   PROFESSOR_OBRIGATORIO("Professor não foi informado."),
   CURSO_OBRIGATORIO("Curso não foi informado."),

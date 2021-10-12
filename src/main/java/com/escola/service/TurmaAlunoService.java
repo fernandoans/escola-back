@@ -10,26 +10,20 @@ import org.springframework.stereotype.Service;
 
 import com.escola.business.TurmaAlunoBusiness;
 import com.escola.business.enums.CodBusinessTurmaAluno;
-import com.escola.model.Aluno;
-import com.escola.model.Turma;
+import com.escola.converters.TurmaAlunoConverter;
+import com.escola.dto.MensagemDTO;
+import com.escola.dto.TurmaAlunoDTO;
 import com.escola.model.TurmaAluno;
-import com.escola.pojo.MensagemPojo;
-import com.escola.pojo.TurmaAlunoPojo;
-import com.escola.repository.AlunoRepository;
 import com.escola.repository.TurmaAlunoRepository;
-import com.escola.repository.TurmaRepository;
 
 @Service
 public class TurmaAlunoService {
 
   @Autowired
   private TurmaAlunoRepository repository;
-  
-  @Autowired
-  private AlunoRepository aluRepository;
 
   @Autowired
-  private TurmaRepository turRepository;
+  private TurmaAlunoConverter converter;
   
   public ResponseEntity<List<TurmaAluno>> findAll() {
     List<TurmaAluno> turmas = (List<TurmaAluno>)repository.findAll();
@@ -49,56 +43,45 @@ public class TurmaAlunoService {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  public ResponseEntity<MensagemPojo> add(TurmaAlunoPojo turmaAlunoPojo) {
+  public ResponseEntity<List<TurmaAluno>> findTurma(Long id) {
+    if (id != null) {
+      List<TurmaAluno> alunos = repository.obterPorTurma(id);
+      if (alunos.isEmpty()) {
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);      
+      }
+      return new ResponseEntity<>(alunos, HttpStatus.OK);    
+    }
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
+
+  public ResponseEntity<MensagemDTO> add(TurmaAlunoDTO turmaAlunoDTO) {
     try {
-      CodBusinessTurmaAluno codBusiness = TurmaAlunoBusiness.verificar(turmaAlunoPojo, 'I', repository);
+      CodBusinessTurmaAluno codBusiness = TurmaAlunoBusiness.verificar(turmaAlunoDTO, 'I', repository);
       if (codBusiness == CodBusinessTurmaAluno.OK) {
-        repository.save(adaptarPojo(turmaAlunoPojo));
-        return new ResponseEntity<>(new MensagemPojo("Turma criada com sucesso."), HttpStatus.OK);
+        repository.save(converter.convertToEntity(turmaAlunoDTO));
+        return new ResponseEntity<>(new MensagemDTO(CodBusinessTurmaAluno.INCLUIDO_OK), HttpStatus.OK);
       } 
-      return new ResponseEntity<>(new MensagemPojo(codBusiness.getDescricao()), HttpStatus.NOT_ACCEPTABLE);
+      return new ResponseEntity<>(new MensagemDTO(codBusiness), HttpStatus.NOT_ACCEPTABLE);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }  
 
-  public ResponseEntity<MensagemPojo> delete(Long id) {
+  public ResponseEntity<MensagemDTO> delete(Long id) {
     try {
       repository.deleteById(id);
-      return new ResponseEntity<>(new MensagemPojo("Turma eliminada com sucesso."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessTurmaAluno.EXCLUIDO_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
   
-  public ResponseEntity<MensagemPojo> deleteAll() {
+  public ResponseEntity<MensagemDTO> deleteAll() {
     try {
       repository.deleteAll();
-      return new ResponseEntity<>(new MensagemPojo("Todas as turmas eliminadas."), HttpStatus.OK);
+      return new ResponseEntity<>(new MensagemDTO(CodBusinessTurmaAluno.EXCLUIDO_ALL_OK), HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-  
-  private TurmaAluno adaptarPojo(TurmaAlunoPojo turmaAlunoPojo) {
-    TurmaAluno turmaAluno = new TurmaAluno();
-
-    // Obter o Turma
-    Turma t = null; 
-    Optional<Turma> optionalTurma = turRepository.findById(Long.parseLong(turmaAlunoPojo.getTurma().getId()));
-    if (optionalTurma.isPresent()) {
-      t = optionalTurma.get();
-    }
-    turmaAluno.setTurma(t);
-
-    // Obter o Aluno
-    Aluno a = null; 
-    Optional<Aluno> optionalAluno = aluRepository.findById(Integer.parseInt(turmaAlunoPojo.getAluno().getMatricula()));
-    if (optionalAluno.isPresent()) {
-      a = optionalAluno.get();
-    }
-    turmaAluno.setAluno(a);
-
-    return turmaAluno;
   }
 }

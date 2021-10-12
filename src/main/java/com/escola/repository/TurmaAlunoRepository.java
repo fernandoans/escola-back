@@ -11,6 +11,9 @@ import com.escola.model.TurmaAluno;
 @Repository
 public interface TurmaAlunoRepository extends CrudRepository<TurmaAluno, Long> {
 
+  @Query("select ta from TurmaAluno ta where ta.turma.id = ?1")
+  List<TurmaAluno> obterPorTurma(Long turma); 
+  
   @Query("delete from TurmaAluno ta where ta.turma = ?1")
   Integer deleteByTurma(Long turma); 
 
