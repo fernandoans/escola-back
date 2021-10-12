@@ -3,6 +3,7 @@ package com.escola.model;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -68,6 +70,11 @@ public class Turma implements Serializable {
   @JoinColumn(name = "curso", referencedColumnName = "id")
   @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
   @Getter @Setter private Curso curso;
+
+  @ApiModelProperty(value = "Alunos")
+  @OneToMany(mappedBy="turma", fetch = FetchType.LAZY)
+  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @Getter @Setter private Set<TurmaAluno> alunos;  
 
   // Heranças Object
   

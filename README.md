@@ -30,7 +30,11 @@ Para a parte do front-end (EscolaFront) foram utilizadas as seguintes tecnologia
 * Bootstrap 4.0
 
 ## Modelagem do Banco
-Para o banco de dados foi utilizado o PostgreSQL, executar o seguinte Script de criação:
+Para o banco de dados foi utilizado o PostgreSQL, conforme o seguinte M&R (Modelo de Entidade e Relacionamento):
+
+![Tela Inicial](MER.png)
+
+Conforme o seguinte Script de criação:
 
 ```
 create schema escola;

@@ -12,18 +12,18 @@ import com.escola.config.model.Servidores;
 public class LaboratorioApplication implements CommandLineRunner {
 
   @Autowired
-  private YAMLConfig myConfig;
+  private YAMLConfig yamlConfig;
 
   public static void main(String[] args) {
     SpringApplication.run(LaboratorioApplication.class, args);
   }
 
   public void run(String... args) throws Exception {
-    System.out.println("Usando o Ambiente: " + myConfig.getAmbiente());
-    System.out.println("Nome: " + myConfig.getNome());
-    System.out.println("Habilitado: " + myConfig.isHabilitado());
+    System.out.println("Usando o Ambiente: " + yamlConfig.getAmbiente());
+    System.out.println("Nome: " + yamlConfig.getNome());
+    System.out.println("Habilitado: " + yamlConfig.isHabilitado());
     System.out.println("Servidores:");
-    for (Servidores s: myConfig.getServidores()) {
+    for (Servidores s: yamlConfig.getServidores()) {
       System.out.println("Endereço: " + s.getIp() + s.getPath());
     }
   }

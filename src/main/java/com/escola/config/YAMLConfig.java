@@ -3,6 +3,7 @@ package com.escola.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +14,7 @@ import lombok.Setter;
 
 @Configuration
 @EnableConfigurationProperties
-//@ConfigurationProperties
+@ConfigurationProperties
 public class YAMLConfig {
 
   @Getter @Setter private String nome;
