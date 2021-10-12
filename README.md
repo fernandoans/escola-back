@@ -1,5 +1,7 @@
-# EscolaBack
-Projeto Escola
+# Projeto Escola: Escola-Back
+Este é um projeto que exemplifica como trabalhar com "Angular 11 + SpringBoot". A arquitetura deste foi montada conforme o seguinte esquema:
+
+![Tela Inicial](FigAngularSpringBootPostgresqlArquitetura.png)
 
 Ao ativar o Back acessar a documentação no Swagger:
 http://localhost:8080/laboratorio/swagger-ui/index.html
@@ -7,16 +9,7 @@ http://localhost:8080/laboratorio/swagger-ui/index.html
 Ao ativar o Front acessar a aplicação em:
 http://localhost:4200
 
-## Compilar
-Ativar o ambiente produtivo
-```
-$ java jar -Dspring.profiles.active=prod escola-back.jar
-```
-
-Ativar o ambiente não produtivo
-```
-$ java jar -Dspring.profiles.active=dev escola-back.jar
-```
+Mais Detalhes do Front: https://github.com/fernandoans/escola-front
 
 ## Ferramentas Utilizadas
 Para esta parte foram utilizadas as seguintes tecnologias:
@@ -29,10 +22,20 @@ Para a parte do front-end (EscolaFront) foram utilizadas as seguintes tecnologia
 * Angular 11
 * Bootstrap 4.0
 
+## Compilar
+Ativar o ambiente produtivo
+```
+$ java jar -Dspring.profiles.active=prod escola-back.jar
+```
+
+Ativar o ambiente não produtivo
+```
+$ java jar -Dspring.profiles.active=dev escola-back.jar
+```
 ## Modelagem do Banco
 Para o banco de dados foi utilizado o PostgreSQL, conforme o seguinte M&R (Modelo de Entidade e Relacionamento):
 
-![Tela Inicial](MER.png)
+![M&E - Modelo de Entidade e Relacionamento](FigMER.png)
 
 Conforme o seguinte Script de criação:
 

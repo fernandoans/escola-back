@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -62,18 +63,18 @@ public class Turma implements Serializable {
   @ApiModelProperty(value = "Professor")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "professor", referencedColumnName = "matricula")
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
   @Getter @Setter private Professor professor;
 
   @ApiModelProperty(value = "Curso")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "curso", referencedColumnName = "id")
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
   @Getter @Setter private Curso curso;
 
   @ApiModelProperty(value = "Alunos")
-  @OneToMany(mappedBy="turma", fetch = FetchType.LAZY)
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @OneToMany(mappedBy="turma", targetEntity = TurmaAluno.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
   @Getter @Setter private Set<TurmaAluno> alunos;  
 
   // Heranças Object

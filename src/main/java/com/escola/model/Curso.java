@@ -63,7 +63,7 @@ public class Curso implements Serializable {
   @ApiModelProperty(value = "Professor")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "professor", referencedColumnName = "matricula")
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
   @Getter @Setter private Professor professor;
 
   // Heranças Object

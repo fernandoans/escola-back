@@ -36,13 +36,13 @@ public class TurmaAluno implements Serializable {
   @ApiModelProperty(value = "Turma")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "turma", referencedColumnName = "id")
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @JsonIgnoreProperties(value = {"alunos", "hibernateLazyInitializer"})
   @Getter @Setter private Turma turma;
 
   @ApiModelProperty(value = "Aluno")
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "aluno", referencedColumnName = "matricula")
-  @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+  @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
   @Getter @Setter private Aluno aluno;
 
 }

@@ -34,7 +34,7 @@ public class TurmaAlunoController {
     return service.findAll();
   }
 
-  @ApiOperation(value = "Retornar uma aluno na turma pela chave")
+  @ApiOperation(value = "Retornar um aluno na turma pela chave")
   @GetMapping(value="/{id}", produces="application/json")
   public ResponseEntity<TurmaAluno> findId(@PathVariable Long id) {
     return service.findId(id);
